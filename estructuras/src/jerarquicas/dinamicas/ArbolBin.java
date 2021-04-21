@@ -234,7 +234,7 @@ public class ArbolBin {
 		
 		listarPosorden(raiz, lista);
 		
-		lista = lista.invertir();
+		lista.invertirInPlace();
 		return lista;
 	}
 	
@@ -259,7 +259,7 @@ public class ArbolBin {
 		
 		listarInorden(raiz, lista);
 		
-		lista = lista.invertir();
+		lista.invertirInPlace();
 		return lista;
 	}
 	
@@ -284,7 +284,7 @@ public class ArbolBin {
 		
 		listarPreorden(raiz, lista);
 		
-		lista = lista.invertir();
+		lista.invertirInPlace();
 		return lista;
 	}
 	
@@ -307,7 +307,7 @@ public class ArbolBin {
 		Lista lista = new Lista();
 		
 		listarHojas(raiz, lista);
-		lista = lista.invertir();
+		lista.invertirInPlace();
 		
 		return lista;
 	}
