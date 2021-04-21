@@ -287,6 +287,30 @@ public class Lista {
 		return invertida;
 	}
 	
+	public void invertirInPlace() {
+		// invierte esta lista
+		
+		if(cabecera != null) {
+			
+			// nueva cabecera de la lista invertida
+			Nodo nuevaCabecera = cabecera;
+			cabecera = cabecera.getEnlace();
+			nuevaCabecera.setEnlace(null);
+			
+			while(cabecera != null) {
+				
+				// sacar el siguiente elemento de la lista
+				Nodo siguiente = cabecera;
+				cabecera = cabecera.getEnlace();
+				
+				// enganchar a la lista invertida
+				siguiente.setEnlace(nuevaCabecera);
+				nuevaCabecera = siguiente;
+			}
+			cabecera = nuevaCabecera;
+		}
+	}
+	
 	public Lista clone() {
 		Lista clon = new Lista();
 		clon.tamanio = this.tamanio;

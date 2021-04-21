@@ -5,7 +5,7 @@ import lineales.dinamicas.Lista;
 public class MiTestLista {
 
 	public static void main(String[] args) {
-		testLongitud(10);
+		testInvertirInPlace(10);
 	}
 	
 	public static void testContar() {
@@ -126,6 +126,33 @@ public class MiTestLista {
 			listas.eliminar(1);
 			System.out.println(lista.toString());
 			System.out.println(lista.invertir().toString());
+			System.out.println();
+		}
+	}
+	
+	public static void testInvertirInPlace(int n) {
+		System.out.println("test invertirInPlace");
+		
+		Lista listas = new Lista();
+		// crear una lista de listas de tamaño 0 a n - 1
+		System.out.println("Crear una lista de listas con elementos de 0 a " + (n - 1));
+		for(int i = 0; i < n + 1; i++) {
+			Lista lista = new Lista();
+			for(int j = 0; j < i; j++) {
+				lista.insertar(j, 1);
+			}
+			listas.insertar(lista, 1);
+		}
+		
+		// imprimir cada lista con su inversa
+		
+		System.out.println("imprimir cada lista, invertir e imprimir de nuevo");
+		while(!listas.esVacia()) {
+			Lista lista = (Lista) listas.recuperar(1);
+			listas.eliminar(1);
+			System.out.println(lista.toString());
+			lista.invertirInPlace();
+			System.out.println(lista.toString());
 			System.out.println();
 		}
 	}
