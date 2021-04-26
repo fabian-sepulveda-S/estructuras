@@ -125,7 +125,7 @@ public class MiTestLista {
 			Lista lista = (Lista) listas.recuperar(1);
 			listas.eliminar(1);
 			System.out.println(lista.toString());
-			System.out.println(lista.invertir().toString());
+			System.out.println(lista.invertida().toString());
 			System.out.println();
 		}
 	}
