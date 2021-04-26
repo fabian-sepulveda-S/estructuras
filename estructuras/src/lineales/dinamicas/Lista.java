@@ -249,30 +249,25 @@ public class Lista {
 	}
 	
 	public int localizar(Object elem) {
-		int pos;
-		if(this.esVacia()) {
-			pos = -1;
+		Nodo aux = cabecera;
+		boolean encontrado = false;
+		int pos = 0;
+		// termina al alcanzar final de la lista o encontrar el elemento
+		while(aux != null && !encontrado) {
+			pos++;
+			// comparar con elemento actual
+			encontrado = aux.getElem().equals(elem);
+			// avanzar
+			aux = aux.getEnlace();
 		}
-		else {
-			Nodo aux = cabecera;
-			boolean encontrado = false;
-			pos = 0;
-			// termina al alcanzar final de la lista o encontrar el elemento
-			while(aux != null && !encontrado) {
-				pos++;
-				// comparar con elemento actual
-				encontrado = aux.getElem().equals(elem);
-				// avanzar
-				aux = aux.getEnlace();
-			}
-			// !encontrado significa salir del while porque
-			// se recorrió toda la lista sin encontrar elem
-			if(!encontrado) pos = -1;
-		}
+		// !encontrado significa salir del while porque
+		// se recorrió toda la lista sin encontrar elem
+		if(!encontrado) pos = -1;
+
 		return pos;
 	}
 	
-	public Lista invertir() {
+	public Lista invertida() {
 		// retorna la inversa de esta lista
 		Nodo aux = cabecera;
 		Lista invertida = new Lista();
