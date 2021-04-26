@@ -195,8 +195,9 @@ public class ArbolBin {
 	// En total cada elemento es visitado 2 veces, la primera al recorrer el 
 	// árbol y la segunda al invertir la lista, siendo los métodos de O(2n) = O(n)
 	
-	// Si en cambio se inserta por el final los métodos son de O(n^2) ya que 
-	// se multiplica el recorrido O(n) del arbol por el O(n) de insertar general
+	// Si en cambio se inserta por el final, por la regla del producto, 
+	// tenemos O(n) por recorrer cada elemento y O(n) de insertar general 
+	// para cada elemento, dando O(n * n) = O(n^2)
 	
 	public Lista PorNivel() {
 		// retorna una lista con los elemetos ordenados en recorrido por nivel
@@ -223,7 +224,7 @@ public class ArbolBin {
 			}
 		}
 		
-		lista = lista.invertir();
+		lista.invertirInPlace();
 		return lista;
 	}
 	
