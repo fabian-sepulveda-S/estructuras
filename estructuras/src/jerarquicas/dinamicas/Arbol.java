@@ -1,5 +1,7 @@
 package jerarquicas.dinamicas;
 
+import lineales.dinamicas.Lista;
+
 public class Arbol {
 
     private NodoArbol raiz;
@@ -86,6 +88,17 @@ public class Arbol {
         return raiz == null;
     }
     
+    public void vaciar() {
+        raiz = null;
+        // al setear raiz null, el garbage collector se lleva la raíz.
+        // hijoIzquirdo queda sin referencia, luego es reclamado dejando
+        // sin referencia a su hijoIzquierdo y su hermanoDerecho.
+        // cada hermanoDerecho al ser reclamado deja sin referencia a su
+        // hermanoDerecho, eventualmente vaciando todo el primer nivel.
+        // cada hermanoDerecho reclamado deja sin referencia su hijoIzuierdo
+        // eventualmente todo el arbol es reclamado.
+    }
+    
     public Object padre(Object elem) {
         // retorna el elemento que es padre de elem o null
         // si elem no se encuentra
@@ -120,9 +133,147 @@ public class Arbol {
         return padre;
     }
 
+    public int nivel(Object elem) {
+        // retorna el nivel donde se encuentra elem dentro de este arbol
+        return nivel(raiz, elem);
+    }
+    
+    public int nivel(NodoArbol subarbol, Object elem) {
+        // retorna el nivel del subarbol donde se encuentra elem
+        
+        // caso base 1: subarbol vacío
+        int nivel = -1;
+        
+        if(subarbol != null) {
+            // caso base 2: encontrado
+            if(subarbol.getElem().equals(elem)) {
+                nivel++;
+            }
+            // caso recursivo: buscar en los hijos
+            NodoArbol hijo = subarbol.getHijoIzquierdo();
+            int nivelHijo = nivel(hijo, elem);
+            while(nivelHijo == -1 && hijo != null) {
+                hijo = hijo.getHermanoDerecho();
+                nivelHijo = nivel(hijo, elem);
+            }
+            if(nivelHijo != -1) {
+                nivel = nivelHijo + 1;
+            }
+        }
+        
+        return nivel;
+    }
+    
+    public int altura() {
+        // retorna la altura de este arbol
+        return altura(raiz);
+    }
+    
+    private int altura(NodoArbol subarbol) {
+        // retorna la altura del subarbol
+        
+        // caso base, arbol vacío tiene altura -1
+        int altura = -1;
+        
+        if(subarbol != null) {
+            NodoArbol hijo = subarbol.getHijoIzquierdo();
+            while(hijo != null) {
+                int alturaHijo = altura(hijo);
+                if(alturaHijo > altura) {
+                    altura = alturaHijo;
+                }
+                hijo = hijo.getHermanoDerecho();
+            }
+            altura++;
+        }
+        return altura;
+    }
+    
+    public Lista obtenerAncestros(Object elem) {
+        // retorna la lista de ancestros de elem
+        Lista lista = obtenerAncestros(raiz, elem);
+        if(lista == null) {
+            lista = new Lista();
+        }
+        return lista;
+    }
+    
+    public Lista obtenerAncestros(NodoArbol subarbol, Object elem) {
+        // retorna la lista de ancestros desde subarbol hasta elem
+        // si elem se encuentra en subarbol, null en caso contrario
+        
+        // caso base 1: subarbol null
+        Lista lista = null;
+        if(subarbol != null) {
+            
+            // caso base 2: encontrado
+            if(subarbol.getElem().equals(elem)) {
+                lista = new Lista();
+                lista.insertar(subarbol.getElem(), 1);
+            }
+            else {
+                NodoArbol hijo = subarbol.getHijoIzquierdo();
+                lista = obtenerAncestros(hijo, elem);
+                if(hijo != null) hijo = hijo.getHermanoDerecho();
+                while(lista == null && hijo != null) {
+                    lista = obtenerAncestros(hijo, elem);
+                    hijo = hijo.getHermanoDerecho();
+                }
+                if(lista != null) {
+                    lista.insertar(subarbol.getElem(), 1);
+                }
+            }
+        }
+        return lista;
+    }
+    
+    public Arbol clone() {
+        // retorna una copia superficial de este arbol
+        Arbol clon = new Arbol();
+        clon.raiz = clone(this.raiz);
+        return clon;
+    }
+    
+    public NodoArbol clone(NodoArbol subarbol) {
+        // retorna una copia superficial de subarbol
+        
+        // caso base 1: subarbol null, nada que copiar
+        NodoArbol copia = null;
+        
+        if(subarbol != null) {
+            // copiar el elemento padre
+            copia = new NodoArbol(subarbol.getElem(), null, null);
+            
+            // copiar hijo izquierdo
+            NodoArbol hijo = subarbol.getHijoIzquierdo();
+            NodoArbol copiaHijo = clone(hijo);
+            copia.setHijoIzquierdo(copiaHijo);
+            
+            // copiar hijos derechos
+            if(hijo != null) hijo = hijo.getHermanoDerecho();
+            while(hijo != null) {
+                
+                // copiar el hijo
+                copiaHijo.setHermanoDerecho(clone(hijo));
+                
+                // avanzar
+                hijo = hijo.getHermanoDerecho();
+                copiaHijo = copiaHijo.getHermanoDerecho();
+            }
+        }
+        return copia;
+    }
+    
     public String toString() {
         // retorna una representación gráfica del arbol
-        return toString(raiz, " ", "r");
+        String rep;
+        if(raiz == null) {
+            rep = "(arbol vacío)";
+        }
+        else {
+            rep = toString(raiz, " ", "r");
+        }
+        return rep;
     }
     
     private String toString(NodoArbol subarbol, String prefijo, String pos) {
@@ -153,4 +304,6 @@ public class Arbol {
         }
         return rep;
     }
+
+
 }
