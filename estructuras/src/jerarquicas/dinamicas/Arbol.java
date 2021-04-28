@@ -1,5 +1,6 @@
 package jerarquicas.dinamicas;
 
+import lineales.dinamicas.Cola;
 import lineales.dinamicas.Lista;
 
 public class Arbol {
@@ -106,7 +107,7 @@ public class Arbol {
         return padre != null? padre.getElem() : null;
     }
     
-    public NodoArbol padre(NodoArbol subarbol, Object elem) {
+    private NodoArbol padre(NodoArbol subarbol, Object elem) {
         // retorna el nodo que es padre de elem, o null si elem
         // no pertenece a subarbol
         // recorre el arbol en preorden
@@ -138,7 +139,7 @@ public class Arbol {
         return nivel(raiz, elem);
     }
     
-    public int nivel(NodoArbol subarbol, Object elem) {
+    private int nivel(NodoArbol subarbol, Object elem) {
         // retorna el nivel del subarbol donde se encuentra elem
         
         // caso base 1: subarbol vacío
@@ -198,7 +199,7 @@ public class Arbol {
         return lista;
     }
     
-    public Lista obtenerAncestros(NodoArbol subarbol, Object elem) {
+    private Lista obtenerAncestros(NodoArbol subarbol, Object elem) {
         // retorna la lista de ancestros desde subarbol hasta elem
         // si elem se encuentra en subarbol, null en caso contrario
         
@@ -234,7 +235,7 @@ public class Arbol {
         return clon;
     }
     
-    public NodoArbol clone(NodoArbol subarbol) {
+    private NodoArbol clone(NodoArbol subarbol) {
         // retorna una copia superficial de subarbol
         
         // caso base 1: subarbol null, nada que copiar
@@ -262,6 +263,123 @@ public class Arbol {
             }
         }
         return copia;
+    }
+    
+    // En los recorridos de arbol se usa insertar(1) en listas porque es
+    // más eficiente que insertar() general, dada la implementación de lista
+    // con cabecera. Esto genera el inconveniente de que la lista tiene los
+    // elementos en el orden inverso, por lo antes de retornar la lista 
+    // se debe invertir. El orden de los recorridos es O(2n) = O(n).
+    
+    // Esto sigue siendo más eficiente que usar insetar() general, que da 
+    // O(n^2) para los recorridos.
+    
+    public Lista porNiveles() {
+        // retorna una lista conteniendo el recorrido por niveles de este arbol
+        Lista lista = new Lista();
+        Cola cola = new Cola();
+        
+        if(raiz != null) {
+            cola.poner(raiz);
+        }
+        while(!cola.esVacia()) {
+            // sacar el siguiente nodo y ponerlo en la lista
+            NodoArbol siguiente = (NodoArbol) cola.obtenerFrente();
+            cola.sacar();
+            lista.insertar(siguiente.getElem(), 1);
+            
+            // encolar los hijos del nodo sacado
+            NodoArbol hijo = siguiente.getHijoIzquierdo();
+            while(hijo != null) {
+                cola.poner(hijo);
+                hijo = hijo.getHermanoDerecho();
+            }
+        }
+        lista.invertirInPlace();
+        return lista;
+    }
+    
+    public Lista preorden() {
+        // retorna una lista de los elementos en el arbol en recorrido preorden
+        Lista lista = new Lista();
+        preorden(raiz, lista);
+        lista.invertirInPlace();
+        return lista;
+    }
+    
+    private void preorden(NodoArbol subarbol, Lista lista) {
+        // inserta los elementos de subarbol en lista en recorrido preorden
+        
+        // caso base 1: no hay nodos que insertar
+        
+        if(subarbol != null) {
+            // insertar padre
+            lista.insertar(subarbol.getElem(), 1);
+            
+            // insertar los hijos
+            NodoArbol hijo = subarbol.getHijoIzquierdo();
+            preorden(hijo, lista);
+            while(hijo != null) {
+                hijo = hijo.getHermanoDerecho();
+                preorden(hijo, lista);
+            }
+        }
+    }
+    
+    public Lista inorden() {
+        // retorna una lista de los elementos en este arbol en recorrido inorden
+        Lista lista = new Lista();
+        inorden(raiz, lista);
+        lista.invertirInPlace();
+        return lista;
+    }
+    
+    private void inorden(NodoArbol subarbol, Lista lista) {
+        // inserta los elementos de subarbol en lista en recorrido inorden
+        
+        // caso base 1: no hay nodos que insertar
+        
+        if(subarbol != null) {
+            // insertar hijo izquierdo
+            NodoArbol hijo = subarbol.getHijoIzquierdo();
+            inorden(hijo, lista);
+            
+            // insertar padre
+            lista.insertar(subarbol.getElem(), 1);
+            
+            // insertar los hijos derechos
+            while(hijo != null) {
+                hijo = hijo.getHermanoDerecho();
+                inorden(hijo, lista);
+            }
+        }
+    }
+    
+    public Lista posorden() {
+        // retorna una lista de los elementos en este arbol en recorrido posorden
+        Lista lista = new Lista();
+        posorden(raiz, lista);
+        lista.invertirInPlace();
+        return lista;
+    }
+    
+    private void posorden(NodoArbol subarbol, Lista lista) {
+        // inserta los elementos de subarbol en lista en recorrido posorden
+        
+        // caos base 1: no hay nodos que insertar
+        
+        if(subarbol != null) {
+            // insertar hijos
+            NodoArbol hijo = subarbol.getHijoIzquierdo();
+            posorden(hijo, lista);
+            while(hijo != null) {
+                hijo = hijo.getHermanoDerecho();
+                posorden(hijo, lista);
+            }
+            
+            // insertar padre
+            lista.insertar(subarbol.getElem(), 1);
+        }
     }
     
     public String toString() {

@@ -11,7 +11,41 @@ public class TestArbolGenerico {
         // testAlturaBinario(5);
         // testClone(3, 3);
         // testNivel(3, 3);
-        testObtenerAncestros(3, 3);
+        // testObtenerAncestros(3, 3);
+        // testPreorden(3, 3);
+        testRecorridosArbolCompletoPorNivel(3, 3);
+    }
+    
+    public static void testRecorridosArbolCompletoPorNivel(int grado, int altura) {
+        System.out.println("-------------------------------------------------");
+        System.out.println("Test recorridos");
+        System.out.println("Cargar arbol completo por niveles...");
+        Arbol arbol = new Arbol();
+        testCargarArbolCompletoPorNivel(arbol, grado, altura);
+        System.out.println();
+        testRecorridos(arbol);
+    }
+    
+    public static void testRecorridos(Arbol arbol) {
+        System.out.println("Test imprimir los recorridos del arbol");
+        System.out.println(arbol.toString());
+        System.out.println();
+        System.out.println("por niveles: " + arbol.porNiveles().toString());
+        System.out.println("preorden: " + arbol.preorden().toString());
+        System.out.println("inorden: " + arbol.inorden().toString());
+        System.out.println("posorden: " + arbol.posorden().toString());
+    }
+    
+    public static void testPreorden(int grado, int altura) {
+        System.out.println("-------------------------------------------------");
+        System.out.println("Test preorden");
+        System.out.println("Crear un arbol cargado en preorden");
+        Arbol arbol = new Arbol();
+        testCargarArbolCompletoPreorden(arbol, grado, altura);
+        System.out.println(arbol.toString());
+        System.out.println("recorrido preorden da lista en orden ascendente");
+        System.out.println(arbol.preorden().toString());
+        System.out.println();
     }
     
     public static void testObtenerAncestros(int grado, int altura) {
